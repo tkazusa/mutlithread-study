@@ -1,6 +1,7 @@
 # Python でのシングルプロセス＆マルチスレッドにてシステムリソースをうまく使うための勉強
 
 ## まずはきちんと計測することを覚える
+[Pythonスクリプトのパフォーマンス計測ガイド](https://yakst.com/ja/posts/42) より、
 - real: 実際にかかった時間
 - user: カーネルの外の処理でかかった時間
 - sys: カーネル内の特定の処理でかかった時間
@@ -24,6 +25,23 @@ class Timer(object):
         if self.verbose:
             print 'elapsed time: %f ms' % self.msecs
 ```
+実行方法は下記。
+```Python
+from timer import Timer
+from redis import Redis
+rdb = Redis()
+
+with Timer() as t:
+    rdb.lpush("foo", "bar")
+print "=> elasped lpush: %s s" % t.secs
+
+with Timer as t:
+    rdb.lpop("foo")
+print "=> elasped lpop: %s s" % t.secs
+```
+
+
+
 
 
 ## Threading
